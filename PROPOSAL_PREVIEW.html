@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Preview - Pages 1 & 2</title>
+    <style>
+        @page {
+            margin: 2cm;
+        }
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            color: #333;
+            background: #f5f5f5;
+        }
+        .page {
+            background: white;
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            min-height: 800px;
+        }
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #1a1a1a, #2c2c2c);
+            color: white;
+            text-align: center;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cover-page-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.08;
+        }
+        .cover-page-shapes svg {
+            width: 100%;
+            height: 100%;
+        }
+        .logo-container {
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .name-logo {
+            font-size: 3.5em;
+            font-weight: 800;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 50%, #b8941f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 30px 0;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.2));
+        }
+        .name-logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        }
+        .cover-page h1 {
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 50%, #b8941f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3.2em;
+            margin: 20px 0;
+            font-weight: 800;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page h2 {
+            color: #ffffff;
+            font-size: 1.8em;
+            margin: 10px 0;
+            border: none;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page .subtitle {
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.4em;
+            margin-top: 30px;
+            letter-spacing: 4px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page .company-name {
+            color: #ffffff;
+            font-size: 1.1em;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px solid;
+            border-image: linear-gradient(90deg, transparent, #d4af37, transparent) 1;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page .company-name p:last-child {
+            color: #d4af37;
+        }
+        .cover-page .company-name p strong {
+            color: #ffffff;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 4px solid #d4af37;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #1a1a1a, #2c2c2c);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 8px;
+        }
+        .header h1 {
+            color: #d4af37 !important;
+            text-shadow: none;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            color: #ffffff;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .proposal-info {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 30px 0;
+            border-left: 4px solid #d4af37;
+        }
+        .proposal-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .proposal-info td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        .proposal-info td:first-child {
+            font-weight: bold;
+            width: 40%;
+        }
+        h2 {
+            color: #1a1a1a;
+            border-bottom: 3px solid #d4af37;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 1.8em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Cover Page -->
+    <div class="page cover-page">
+        <!-- Background Shapes from Logo -->
+        <div class="cover-page-shapes">
+            <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="bgGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#f4d03f;stop-opacity:0.12" />
+                        <stop offset="50%" style="stop-color:#d4af37;stop-opacity:0.1" />
+                        <stop offset="100%" style="stop-color:#b8941f;stop-opacity:0.08" />
+                    </linearGradient>
+                </defs>
+                <!-- Large circles (from logo) -->
+                <circle cx="150" cy="150" r="80" fill="url(#bgGoldGradient)" opacity="0.4"/>
+                <circle cx="850" cy="850" r="70" fill="url(#bgGoldGradient)" opacity="0.3"/>
+                <circle cx="850" cy="200" r="60" fill="url(#bgGoldGradient)" opacity="0.35"/>
+                <circle cx="200" cy="800" r="65" fill="url(#bgGoldGradient)" opacity="0.3"/>
+                <!-- Small accent circles -->
+                <circle cx="100" cy="300" r="25" fill="url(#bgGoldGradient)" opacity="0.25"/>
+                <circle cx="900" cy="700" r="30" fill="url(#bgGoldGradient)" opacity="0.2"/>
+                <circle cx="700" cy="150" r="20" fill="url(#bgGoldGradient)" opacity="0.25"/>
+                <circle cx="300" cy="900" r="28" fill="url(#bgGoldGradient)" opacity="0.2"/>
+                <!-- Accent lines (from logo) -->
+                <line x1="50" y1="500" x2="150" y2="500" stroke="url(#bgGoldGradient)" stroke-width="3" stroke-linecap="round" opacity="0.2"/>
+                <line x1="850" y1="500" x2="950" y2="500" stroke="url(#bgGoldGradient)" stroke-width="3" stroke-linecap="round" opacity="0.2"/>
+                <line x1="500" y1="50" x2="500" y2="150" stroke="url(#bgGoldGradient)" stroke-width="3" stroke-linecap="round" opacity="0.2"/>
+                <line x1="500" y1="850" x2="500" y2="950" stroke="url(#bgGoldGradient)" stroke-width="3" stroke-linecap="round" opacity="0.2"/>
+                <!-- Corner accents (from logo) -->
+                <path d="M 100 100 L 150 100 L 100 150 Z" fill="url(#bgGoldGradient)" opacity="0.15"/>
+                <path d="M 900 100 L 900 150 L 850 100 Z" fill="url(#bgGoldGradient)" opacity="0.15"/>
+                <path d="M 100 900 L 150 900 L 100 850 Z" fill="url(#bgGoldGradient)" opacity="0.15"/>
+                <path d="M 900 900 L 900 850 L 850 900 Z" fill="url(#bgGoldGradient)" opacity="0.15"/>
+            </svg>
+        </div>
+        <div class="logo-container">
+            <div class="name-logo">Talha Saeed</div>
+        </div>
+        <h1>Website Development Proposal</h1>
+        <h2>Hasan Irfan Premium Perfumes</h2>
+        <p class="subtitle">PROFESSIONAL E-COMMERCE WEBSITE</p>
+        <div class="company-name">
+            <p><strong>Prepared by:</strong></p>
+            <p style="font-size: 1.3em; color: #d4af37; margin-top: 10px;">Talha Saeed</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">Date: _________________________</p>
+        </div>
+    </div>
+
+    <!-- Page 2: Header and Info -->
+    <div class="page">
+        <div class="header">
+            <h1>Website Development Proposal</h1>
+            <p><strong>Hasan Irfan Premium Perfumes</strong></p>
+            <p>Professional E-commerce Website Development</p>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #d4af37;">Prepared by: <strong>Talha Saeed</strong></p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #999;">Date: _________________________</p>
+        </div>
+
+        <div class="proposal-info">
+            <table>
+                <tr>
+                    <td>Prepared For:</td>
+                    <td>Hasan Irfan</td>
+                </tr>
+                <tr>
+                    <td>Project:</td>
+                    <td>E-commerce Website Development</td>
+                </tr>
+                <tr>
+                    <td>Proposal Valid Until:</td>
+                    <td>30 days from date</td>
+                </tr>
+                <tr>
+                    <td>Project Timeline:</td>
+                    <td>3-4 weeks from project start</td>
+                </tr>
+            </table>
+        </div>
+
+        <h2>1. Executive Summary</h2>
+        <p>This proposal outlines the development of a professional, fully-functional e-commerce website for <strong>Hasan Irfan Premium Perfumes</strong>. The website will feature a modern design, complete product catalog, secure shopping cart, multiple payment options, and mobile-responsive layout to provide an exceptional online shopping experience for your customers.</p>
+        
+        <p>Our solution will enable you to:</p>
+        <ul>
+            <li>Showcase your premium perfume collection professionally</li>
+            <li>Accept orders online with multiple payment methods</li>
+            <li>Manage products and inventory easily</li>
+            <li>Reach customers across Pakistan and beyond</li>
+            <li>Build your brand presence online</li>
+        </ul>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasan Irfan - Premium Perfumes | Luxury Fragrances</title>
+    <meta name="description" content="Discover premium luxury perfumes at Hasan Irfan. Curated collection of men's, women's, and unisex fragrances. Shop now for elegant scents that define sophistication.">
+    <meta name="keywords" content="premium perfumes, luxury fragrances, men's perfume, women's perfume, unisex perfume, Hasan Irfan">
+    <meta name="author" content="Hasan Irfan">
+    <meta property="og:title" content="Hasan Irfan - Premium Perfumes">
+    <meta property="og:description" content="Luxury fragrances that define elegance and sophistication">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hasan-irfan-perfumes.netlify.app">
+    <link rel="canonical" href="https://hasan-irfan-perfumes.netlify.app">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Italiana&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Banner Ticker -->
+    <div class="top-banner">
+        <div class="ticker-container">
+            <div class="ticker-item">
+                <span class="ticker-icon">🚚</span>
+                <span>FREE SHIPPING on orders over PKR 5,000</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">↩️</span>
+                <span>30-Day Return Policy - Easy Returns & Exchanges</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">💎</span>
+                <span>Premium Quality Guaranteed</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-top">
+                <div class="header-search">
+                    <input type="text" id="searchInput" placeholder="Search products..." class="search-input">
+                    <button class="search-btn" id="searchBtn">🔍</button>
+                </div>
+                <div class="header-logo">
+                    <h1 class="logo-text">Hasan Irfan</h1>
+                    <span class="logo-tagline">Premium Perfumes</span>
+                </div>
+                <div class="header-actions">
+                    <button class="account-btn" id="accountBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Account</span>
+                    </button>
+                    <div class="cart-icon" id="cartIcon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Menu with Dropdowns -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Shop <span class="dropdown-arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#products" data-filter="all">All Products</a></li>
+                        <li><a href="#products" data-filter="oil">Oils</a></li>
+                        <li><a href="#products" data-filter="niche-spray">Niche Spray</a></li>
+                        <li><a href="#products" data-filter="impressions">Impressions</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Deals <span class="dropdown-arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#products">Special Offers</a></li>
+                        <li><a href="#products">Flash Sales</a></li>
+                        <li><a href="#products">Bundle Deals</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Services <span class="dropdown-arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#about">Custom Fragrances</a></li>
+                        <li><a href="#about">Gift Wrapping</a></li>
+                        <li><a href="#about">Fragrance Consultation</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#products" data-filter="niche-spray" class="nav-link">Niche <span class="dropdown-arrow">▼</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#products" data-filter="niche-spray">Niche Collections</a></li>
+                        <li><a href="#products" data-filter="niche-spray">Limited Editions</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Banner with Tagline -->
+    <section class="hero-banner">
+        <div class="banner-image">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <p class="banner-tagline">Where Luxury Meets Fragrance - Discover Your Signature Scent</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div class="container">
+            <div class="content-layout">
+                <!-- Left Sidebar Filters -->
+                <aside class="sidebar-filters">
+                    <h3 class="filter-title">Filter Products</h3>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Range</label>
+                        <select class="filter-select" id="filterRange">
+                            <option value="">All Ranges</option>
+                            <option value="budget">Budget (Under PKR 500)</option>
+                            <option value="mid">Mid-Range (PKR 500-1500)</option>
+                            <option value="premium">Premium (PKR 1500-3000)</option>
+                            <option value="luxury">Luxury (PKR 3000+)</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Gender</label>
+                        <select class="filter-select" id="filterGender">
+                            <option value="">All Genders</option>
+                            <option value="men">Men</option>
+                            <option value="women">Women</option>
+                            <option value="unisex">Unisex</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Type</label>
+                        <select class="filter-select" id="filterType">
+                            <option value="">All Types</option>
+                            <option value="FRENCH">French</option>
+                            <option value="ARABIC">Arabic</option>
+                            <option value="ORIENTAL">Oriental</option>
+                            <option value="UNIQUE">Unique</option>
+                            <option value="FLORAL">Floral</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Season</label>
+                        <select class="filter-select" id="filterSeason">
+                            <option value="">All Seasons</option>
+                            <option value="spring">Spring</option>
+                            <option value="summer">Summer</option>
+                            <option value="fall">Fall</option>
+                            <option value="winter">Winter</option>
+                            <option value="all-season">All Season</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Sillage/Projection</label>
+                        <select class="filter-select" id="filterSillage">
+                            <option value="">All</option>
+                            <option value="intimate">Intimate</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="strong">Strong</option>
+                            <option value="beast">Beast Mode</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Lasting</label>
+                        <select class="filter-select" id="filterLasting">
+                            <option value="">All</option>
+                            <option value="short">Short (2-4 hours)</option>
+                            <option value="medium">Medium (4-6 hours)</option>
+                            <option value="long">Long (6-8 hours)</option>
+                            <option value="very-long">Very Long (8+ hours)</option>
+                        </select>
+                    </div>
+
+                    <button class="clear-filters-btn" id="clearFilters">Clear All Filters</button>
+                </aside>
+
+                <!-- Main Products Area -->
+                <div class="products-main">
+                    <div class="products-header">
+                        <h2 class="products-title">Our Collection</h2>
+                        <div class="sort-container">
+                            <label for="sortSelect" class="sort-label">Sort by:</label>
+                            <select class="sort-select" id="sortSelect">
+                                <option value="featured">Featured</option>
+                                <option value="bestselling">Best Selling</option>
+                                <option value="a-z">Alphabetically A-Z</option>
+                                <option value="z-a">Alphabetically Z-A</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="price-low">Price: Low to High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="products-grid" id="productsGrid">
+                        <!-- Products will be dynamically loaded here -->
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Why Choose Hasan Irfan Section -->
+    <section class="why-choose-section">
+        <div class="container">
+            <h2 class="section-title">Why Choose Hasan Irfan</h2>
+            <div class="why-choose-grid">
+                <div class="why-item">
+                    <div class="why-icon">💎</div>
+                    <h3>Premium Quality</h3>
+                    <p>We source only the finest fragrances from around the world, ensuring every product meets our high standards of excellence.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">🌍</div>
+                    <h3>Wide Selection</h3>
+                    <p>From classic French perfumes to exotic Arabic oils, discover a diverse collection of over 300+ premium fragrances.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">🚚</div>
+                    <h3>Fast Delivery</h3>
+                    <p>Free shipping on orders over PKR 5,000. Fast and secure delivery across Pakistan with tracking.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">💯</div>
+                    <h3>Authentic Products</h3>
+                    <p>100% authentic fragrances guaranteed. We work directly with trusted suppliers to ensure genuine products.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Showcase -->
+    <section class="category-showcase">
+        <div class="container">
+            <div class="category-grid">
+                <div class="category-card">
+                    <div class="category-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <span style="font-size: 5rem;">🌸</span>
+                    </div>
+                    <div class="category-content">
+                        <h3>Niche Sprays</h3>
+                        <p>Discover our exclusive collection of niche fragrances. Unique scents crafted for the discerning nose.</p>
+                        <p>Premium quality sprays with long-lasting projection and exceptional sillage.</p>
+                        <a href="#products" data-filter="niche-spray" class="category-link">See More →</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <span style="font-size: 5rem;">💧</span>
+                    </div>
+                    <div class="category-content">
+                        <h3>Premium Oils</h3>
+                        <p>Experience the richness of our premium oil collection. Concentrated fragrances for intense, long-lasting scent.</p>
+                        <p>Available in multiple sizes from 0.5ML testers to 80ML bottles for every need.</p>
+                        <a href="#products" data-filter="oil" class="category-link">See More →</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <span style="font-size: 5rem;">🌹</span>
+                    </div>
+                    <div class="category-content">
+                        <h3>Brand Impressions</h3>
+                        <p>High-quality impressions of luxury designer fragrances. Experience iconic scents at accessible prices.</p>
+                        <p>From Tom Ford to Creed, discover your favorite designer fragrances in our impressions collection.</p>
+                        <a href="#products" data-filter="impressions" class="category-link">See More →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Email Subscription -->
+    <section class="subscription-section">
+        <div class="container">
+            <div class="subscription-content">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter for exclusive offers, new arrivals, and fragrance tips</p>
+                <form class="subscription-form" id="subscriptionForm" name="subscription" netlify netlify-honeypot="bot-field" data-netlify="true">
+                    <input type="hidden" name="form-name" value="subscription">
+                    <p style="display: none;">
+                        <label>Don't fill this out: <input name="bot-field" /></label>
+                    </p>
+                    <div class="subscription-input-group">
+                        <input type="email" name="email" placeholder="Enter your email address" required class="subscription-input">
+                        <button type="submit" class="subscription-btn">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <p>Hasan Irfan Premium Perfumes brings you the finest collection of luxury fragrances from around the world. We are committed to providing authentic, high-quality perfumes at competitive prices.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">Facebook</a>
+                        <a href="#" class="social-link">Instagram</a>
+                        <a href="#" class="social-link">WhatsApp</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns & Exchanges</a></li>
+                        <li><a href="#">Track Your Order</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#products" data-filter="all">All Products</a></li>
+                        <li><a href="#products" data-filter="oil">Oils</a></li>
+                        <li><a href="#products" data-filter="niche-spray">Niche Sprays</a></li>
+                        <li><a href="#products" data-filter="impressions">Impressions</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Get In Touch</h3>
+                    <div class="contact-info">
+                        <p><strong>Email:</strong> info@hasanirfan.com</p>
+                        <p><strong>Phone:</strong> +92 XXX XXXXXXX</p>
+                        <p><strong>WhatsApp:</strong> +92 XXX XXXXXXX</p>
+                        <p><strong>Hours:</strong> Mon-Sat: 10AM - 8PM</p>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Address</h3>
+                    <p>Hasan Irfan Premium Perfumes<br>
+                    [Your Address Here]<br>
+                    Pakistan</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Payment Options</h3>
+                    <ul class="footer-links">
+                        <li>💵 Cash on Delivery</li>
+                        <li>💳 Debit/Credit Card</li>
+                        <li>📱 JazzCash</li>
+                        <li>📱 Easypaisa</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Hasan Irfan Premium Perfumes. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="cart-close" id="cartClose">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: PKR <span id="cartTotal">0</span></strong>
+            </div>
+            <button class="btn btn-primary btn-checkout" id="checkoutBtn">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="checkout-modal-content">
+            <div class="checkout-header">
+                <h2>Complete Your Order</h2>
+                <button class="checkout-close" id="checkoutModalClose">&times;</button>
+            </div>
+            
+            <div class="checkout-body">
+                <div class="order-summary-section">
+                    <h3>Order Summary</h3>
+                    <div id="checkoutOrderItems"></div>
+                    <div class="checkout-total">
+                        <strong>Total: PKR <span id="checkoutTotal">0</span></strong>
+                    </div>
+                </div>
+
+                <form class="checkout-form" id="checkoutForm" name="order" netlify netlify-honeypot="bot-field" data-netlify="true">
+                    <input type="hidden" name="form-name" value="order">
+                    <input type="hidden" name="order-items" id="orderItemsInput">
+                    <input type="hidden" name="order-total" id="orderTotalInput">
+                    <p style="display: none;">
+                        <label>Don't fill this out: <input name="bot-field" /></label>
+                    </p>
+
+                    <h3>Customer Information</h3>
+                    <div class="form-row">
+                        <input type="text" name="full-name" placeholder="Full Name" required>
+                        <input type="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="tel" name="phone" placeholder="Phone Number" required>
+                        <input type="text" name="address" placeholder="Delivery Address" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="text" name="city" placeholder="City" required>
+                        <input type="text" name="zipcode" placeholder="ZIP/Postal Code" required>
+                    </div>
+
+                    <h3>Payment Method</h3>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="payment-method" value="cash-on-delivery" required checked>
+                            <div class="payment-option-content">
+                                <strong>Cash on Delivery</strong>
+                                <span>Pay with cash when your order arrives</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment-method" value="online-card" required>
+                            <div class="payment-option-content">
+                                <strong>Pay Online with Card</strong>
+                                <span>Pay securely with debit/credit card now</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment-method" value="jazzcash" required>
+                            <div class="payment-option-content">
+                                <strong>JazzCash</strong>
+                                <span>Pay using your JazzCash wallet or account</span>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment-method" value="easypaisa" required>
+                            <div class="payment-option-content">
+                                <strong>Easypaisa</strong>
+                                <span>Pay using your Easypaisa wallet or account</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="payment-note" id="paymentNote">
+                        <p>💵 You will pay with cash when your order is delivered.</p>
+                    </div>
+
+                    <!-- Online Card Payment Form -->
+                    <div id="onlineCardPaymentContainer" style="display: none; margin-top: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Card Details</h4>
+                        <div class="card-payment-form">
+                            <div class="form-row">
+                                <input type="text" id="cardNumber" name="card-number" placeholder="Card Number (16 digits)" maxlength="19" pattern="[0-9\s]{13,19}" inputmode="numeric" autocomplete="cc-number">
+                                <input type="text" id="cardExpiry" name="card-expiry" placeholder="MM/YY" maxlength="5" pattern="(0[1-9]|1[0-2])\/?([0-9]{2})" inputmode="numeric" autocomplete="cc-exp">
+                            </div>
+                            <div class="form-row">
+                                <input type="text" id="cardCvv" name="card-cvv" placeholder="CVV" maxlength="4" pattern="[0-9]{3,4}" inputmode="numeric" autocomplete="cc-csc">
+                                <input type="text" id="cardName" name="card-name" placeholder="Name on Card" autocomplete="cc-name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JazzCash Payment Form -->
+                    <div id="jazzCashPaymentContainer" style="display: none; margin-top: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color);">JazzCash Details</h4>
+                        <input type="tel" id="jazzCashNumber" name="jazzcash-number" placeholder="JazzCash Mobile Number (e.g., 03XX-XXXXXXX)" pattern="03[0-9]{9}" maxlength="11" inputmode="numeric" class="form-input">
+                    </div>
+
+                    <!-- Easypaisa Payment Form -->
+                    <div id="easypaisaPaymentContainer" style="display: none; margin-top: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-color);">Easypaisa Details</h4>
+                        <input type="tel" id="easypaisaNumber" name="easypaisa-number" placeholder="Easypaisa Mobile Number (e.g., 03XX-XXXXXXX)" pattern="03[0-9]{9}" maxlength="11" inputmode="numeric" class="form-input">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-submit-order">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign In / Sign Up Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <div class="auth-header">
+                <h2 id="authTitle">Sign In</h2>
+                <button class="auth-close" id="authClose">&times;</button>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="signin">Sign In</button>
+                <button class="auth-tab" data-tab="signup">Sign Up</button>
+            </div>
+            <div class="auth-body">
+                <!-- Sign In Form -->
+                <form class="auth-form" id="signInForm" style="display: block;">
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                    <p class="auth-link">Forgot password? <a href="#">Click here</a></p>
+                </form>
+                <!-- Sign Up Form -->
+                <form class="auth-form" id="signUpForm" style="display: none;">
+                    <input type="text" placeholder="Full Name" required>
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="tel" placeholder="Phone Number" required>
+                    <input type="password" placeholder="Password" required>
+                    <input type="password" placeholder="Confirm Password" required>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                    <p class="auth-link">Already have an account? <a href="#" id="switchToSignIn">Sign In</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

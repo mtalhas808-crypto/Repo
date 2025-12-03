@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Development Proposal - Hasan Irfan Perfumes</title>
+    <style>
+        @page {
+            margin: 2cm;
+            size: A4;
+        }
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            .cover-page {
+                page-break-after: always;
+                background: linear-gradient(to right, #1a1a1a, #2c2c2c) !important;
+                min-height: 100vh;
+                margin: 0;
+                padding: 60px 40px;
+            }
+            .header {
+                background: linear-gradient(to right, #1a1a1a, #2c2c2c) !important;
+                page-break-inside: avoid;
+            }
+            .package-box {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%) !important;
+                page-break-inside: avoid;
+            }
+            .payment-schedule th {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%) !important;
+            }
+            .signature-section {
+                page-break-inside: avoid;
+            }
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            ul, ol {
+                page-break-inside: avoid;
+            }
+            a {
+                color: #0066cc;
+                text-decoration: underline;
+            }
+        }
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            color: #333;
+            background: white;
+        }
+        .cover-page {
+            page-break-after: always;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #1a1a1a, #2c2c2c);
+            color: white;
+            text-align: center;
+            padding: 60px 40px;
+            margin: -40px -40px 40px -40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cover-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 60%);
+            z-index: 0;
+        }
+        .cover-page-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.08;
+        }
+        .cover-page-shapes svg {
+            width: 100%;
+            height: 100%;
+        }
+        .logo-container {
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .name-logo {
+            font-size: 3.5em;
+            font-weight: 800;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 50%, #b8941f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 30px 0;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.2));
+        }
+        .name-logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        }
+        .cover-page h1 {
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 50%, #b8941f 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3.2em;
+            margin: 20px 0;
+            font-weight: 800;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page h2 {
+            color: #ffffff;
+            font-size: 1.8em;
+            margin: 10px 0;
+            border: none;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page .subtitle {
+            background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.4em;
+            margin-top: 30px;
+            letter-spacing: 4px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page .company-name {
+            color: #ffffff;
+            font-size: 1.1em;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px solid;
+            border-image: linear-gradient(90deg, transparent, #d4af37, transparent) 1;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+        .cover-page .company-name p:last-child {
+            color: #d4af37;
+        }
+        .cover-page .company-name p strong {
+            color: #ffffff;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 4px solid #d4af37;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            background: linear-gradient(to right, #1a1a1a, #2c2c2c);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 8px;
+        }
+        .header h1 {
+            color: #d4af37 !important;
+            text-shadow: none;
+        }
+        .header p {
+            color: #ffffff;
+        }
+        .header h1 {
+            color: #1a1a1a;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            color: #666;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .proposal-info {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 30px 0;
+            border-left: 4px solid #d4af37;
+        }
+        .proposal-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .proposal-info td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        .proposal-info td:first-child {
+            font-weight: bold;
+            width: 40%;
+        }
+        h2 {
+            color: #1a1a1a;
+            border-bottom: 3px solid #d4af37;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #444;
+            margin-top: 25px;
+            font-size: 1.3em;
+        }
+        h4 {
+            color: #666;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+        ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .package-box {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            border: 3px solid #d4af37;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            color: white;
+        }
+        .package-box h3 {
+            color: #d4af37;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .package-box p {
+            color: #f5f5f5;
+        }
+        .price {
+            font-size: 2em;
+            color: #d4af37;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        .checklist {
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .checklist ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .checklist li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .excluded {
+            background-color: #fff3cd;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .payment-schedule {
+            background-color: #f0f0f0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .payment-schedule table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .payment-schedule th,
+        .payment-schedule td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .payment-schedule th {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            color: #d4af37;
+            font-weight: bold;
+        }
+        .payment-schedule tr:hover {
+            background-color: #f5f5f5;
+        }
+        .timeline {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .timeline-item {
+            margin: 15px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .timeline-item:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #d4af37;
+            font-weight: bold;
+        }
+        .signature-section {
+            margin-top: 60px;
+            page-break-inside: avoid;
+        }
+        .signature-box {
+            display: inline-block;
+            width: 45%;
+            margin: 20px 2%;
+            vertical-align: top;
+        }
+        .signature-line {
+            border-top: 2px solid #333;
+            margin-top: 60px;
+            padding-top: 5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .note {
+            background-color: #fff3cd;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #d4af37;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>1. Executive Summary</h2>
+    <p>This proposal outlines the development of a professional, fully-functional e-commerce website for <strong>Hasan Irfan Premium Perfumes</strong>. The website will feature a modern design, complete product catalog, secure shopping cart, multiple payment options, and mobile-responsive layout to provide an exceptional online shopping experience for your customers.</p>
+    
+    <p>Our solution will enable you to:</p>
+    <ul>
+        <li>Showcase your premium perfume collection professionally</li>
+        <li>Accept orders online with multiple payment methods</li>
+        <li>Manage products and inventory easily</li>
+        <li>Reach customers across Pakistan and beyond</li>
+        <li>Build your brand presence online</li>
+    </ul>
+
+    <h2>2. Project Overview</h2>
+    <h3>2.1 Objectives</h3>
+    <ul>
+        <li>Create a professional, user-friendly e-commerce website</li>
+        <li>Implement secure payment processing options</li>
+        <li>Ensure mobile-responsive design for all devices</li>
+        <li>Optimize for search engines (SEO)</li>
+        <li>Provide easy content management capabilities</li>
+    </ul>
+
+    <h3>2.2 Target Audience</h3>
+    <ul>
+        <li>Perfume enthusiasts in Pakistan</li>
+        <li>Online shoppers looking for premium fragrances</li>
+        <li>Gift buyers seeking luxury products</li>
+        <li>Customers preferring online shopping convenience</li>
+    </ul>
+
+    <h2>3. Services Included</h2>
+    
+    <div class="package-box">
+        <h3>Standard E-commerce Website Package</h3>
+        <div class="price">Rs. 120,000</div>
+        <p style="font-size: 0.9em; color: #666;">One-time development fee</p>
+    </div>
+
+    <div class="checklist">
+        <h4>Website Development & Design</h4>
+        <ul>
+            <li>Custom website design tailored to your brand</li>
+            <li>Professional, modern, and elegant user interface</li>
+            <li>Mobile-responsive design (works on all devices)</li>
+            <li>Fast loading times and optimized performance</li>
+            <li>SEO-friendly structure and optimization</li>
+        </ul>
+
+        <h4>E-commerce Features</h4>
+        <ul>
+            <li>Product catalog with unlimited products</li>
+            <li>Product categories and filtering (Men, Women, Unisex)</li>
+            <li>Shopping cart functionality</li>
+            <li>Secure checkout process</li>
+            <li>Order management system</li>
+            <li>Product search functionality</li>
+        </ul>
+
+        <h4>Payment Integration</h4>
+        <ul>
+            <li>Cash on Delivery option</li>
+            <li>Debit/Credit Card payment (online)</li>
+            <li>JazzCash integration</li>
+            <li>Easypaisa integration</li>
+            <li>Secure payment processing setup</li>
+        </ul>
+
+        <h4>Additional Features</h4>
+        <ul>
+            <li>Contact form with email notifications</li>
+            <li>About Us section</li>
+            <li>FAQ section</li>
+            <li>Social media integration</li>
+            <li>WhatsApp Business integration</li>
+            <li>Terms & Conditions page</li>
+            <li>Privacy Policy page</li>
+        </ul>
+
+        <h4>Technical Setup</h4>
+        <ul>
+            <li>Domain setup assistance (domain cost separate)</li>
+            <li>Free hosting setup on Netlify</li>
+            <li>Free SSL certificate (HTTPS)</li>
+            <li>Website backup and security</li>
+            <li>Google Analytics integration</li>
+        </ul>
+
+        <h4>Support & Training</h4>
+        <ul>
+            <li>3 months free technical support</li>
+            <li>Website training session (2 hours)</li>
+            <li>Documentation and user guide</li>
+            <li>Email support during business hours</li>
+        </ul>
+    </div>
+
+    <div class="excluded">
+        <h4>Not Included in Base Price:</h4>
+        <ul>
+            <li><strong>Domain Purchase</strong>: Client responsible for domain cost (~Rs. 3,000/year)</li>
+            <li><strong>Product Images</strong>: Client provides high-quality product photos</li>
+            <li><strong>Content Writing</strong>: Client provides product descriptions and content</li>
+            <li><strong>Logo Design</strong>: Available as add-on service (Rs. 15,000)</li>
+            <li><strong>Product Photography</strong>: Available as add-on service (Rs. 5,000-10,000 per product)</li>
+            <li><strong>Payment Gateway Merchant Accounts</strong>: Client sets up JazzCash/Easypaisa accounts</li>
+            <li><strong>Marketing/Advertising</strong>: Available as separate service</li>
+        </ul>
+    </div>
+
+    <h2>4. Payment Terms</h2>
+    
+    <div class="payment-schedule">
+        <h3>Payment Schedule</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Milestone</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Initial Payment</strong></td>
+                    <td><strong>Rs. 60,000</strong></td>
+                    <td>Upon contract signing</td>
+                    <td>50% upfront to begin development</td>
+                </tr>
+                <tr>
+                    <td><strong>Progress Payment</strong></td>
+                    <td><strong>Rs. 30,000</strong></td>
+                    <td>When website is 80% complete</td>
+                    <td>After initial review and feedback</td>
+                </tr>
+                <tr>
+                    <td><strong>Final Payment</strong></td>
+                    <td><strong>Rs. 30,000</strong></td>
+                    <td>Upon final delivery</td>
+                    <td>After website launch and approval</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top: 15px;"><strong>Total Project Cost: Rs. 120,000</strong></p>
+    </div>
+
+    <div class="note">
+        <strong>Payment Methods Accepted:</strong> Bank transfer, JazzCash, Easypaisa, or cash (by arrangement)
+    </div>
+
+    <h2>5. Project Timeline</h2>
+    
+    <div class="timeline">
+        <h3>Development Schedule</h3>
+        <div class="timeline-item">
+            <strong>Week 1:</strong> Project kickoff, design approval, initial setup
+        </div>
+        <div class="timeline-item">
+            <strong>Week 2:</strong> Core development, product catalog setup, shopping cart implementation
+        </div>
+        <div class="timeline-item">
+            <strong>Week 3:</strong> Payment integration, testing, content integration
+        </div>
+        <div class="timeline-item">
+            <strong>Week 4:</strong> Final testing, revisions, training, and launch
+        </div>
+        <p style="margin-top: 20px;"><strong>Total Duration: 3-4 weeks</strong> (subject to client feedback and content delivery)</p>
+    </div>
+
+    <div class="note">
+        <strong>Note:</strong> Timeline may vary based on:
+        <ul style="margin-top: 10px;">
+            <li>Speed of client feedback and approvals</li>
+            <li>Availability of product images and content</li>
+            <li>Payment gateway account setup time</li>
+        </ul>
+    </div>
+
+    <h2>6. Ongoing Maintenance (Optional)</h2>
+    
+    <div class="package-box">
+        <h3>Monthly Maintenance Package</h3>
+        <div class="price" style="font-size: 1.5em;">Rs. 10,000/month</div>
+        <p style="font-size: 0.9em; color: #666;">Optional - Can be added after project completion</p>
+    </div>
+
+    <div class="checklist">
+        <h4>Includes:</h4>
+        <ul>
+            <li>Product updates and additions</li>
+            <li>Content updates and changes</li>
+            <li>Bug fixes and technical support</li>
+            <li>Security updates</li>
+            <li>Performance monitoring</li>
+            <li>10 hours of support per month</li>
+            <li>Email support (response within 24 hours)</li>
+        </ul>
+    </div>
+
+    <h2>7. Additional Services (Available on Request)</h2>
+    
+    <div class="payment-schedule">
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Logo Design</td>
+                    <td>Rs. 15,000</td>
+                    <td>Professional logo design with 3 concepts</td>
+                </tr>
+                <tr>
+                    <td>Product Photography</td>
+                    <td>Rs. 5,000-10,000/product</td>
+                    <td>High-quality product photos (per product)</td>
+                </tr>
+                <tr>
+                    <td>Content Writing</td>
+                    <td>Rs. 2,000-5,000/page</td>
+                    <td>Professional content writing per page</td>
+                </tr>
+                <tr>
+                    <td>Social Media Setup</td>
+                    <td>Rs. 10,000</td>
+                    <td>Social media account setup and integration</td>
+                </tr>
+                <tr>
+                    <td>Google Ads Setup</td>
+                    <td>Rs. 20,000</td>
+                    <td>Google Ads account setup and initial campaign</td>
+                </tr>
+                <tr>
+                    <td>Major Feature Addition</td>
+                    <td>Rs. 10,000-50,000</td>
+                    <td>Custom features beyond scope (quote on request)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>8. Terms & Conditions</h2>
+    
+    <h3>8.1 Project Scope</h3>
+    <ul>
+        <li>This proposal is valid for 30 days from the date of issue</li>
+        <li>Any changes to scope will be quoted separately</li>
+        <li>Client must provide all content, images, and information in a timely manner</li>
+        <li>Delays in content delivery may extend project timeline</li>
+    </ul>
+
+    <h3>8.2 Revisions</h3>
+    <ul>
+        <li>2 rounds of revisions included in base price</li>
+        <li>Additional revisions charged at Rs. 5,000 per round</li>
+        <li>Major design changes may incur additional charges</li>
+    </ul>
+
+    <h3>8.3 Ownership</h3>
+    <ul>
+        <li>Upon full payment, client owns the website and all content</li>
+        <li>Developer retains right to use project in portfolio</li>
+        <li>Third-party services (hosting, domains) subject to their terms</li>
+    </ul>
+
+    <h3>8.4 Support</h3>
+    <ul>
+        <li>3 months free support included from launch date</li>
+        <li>Support covers bug fixes and technical issues</li>
+        <li>Content updates and new features charged separately</li>
+        <li>Support available via email during business hours</li>
+    </ul>
+
+    <h3>8.5 Cancellation</h3>
+    <ul>
+        <li>If project is cancelled before 50% completion: 50% of paid amount retained</li>
+        <li>If project is cancelled after 50% completion: 75% of paid amount retained</li>
+        <li>All work completed up to cancellation point will be delivered</li>
+    </ul>
+
+    <h3>8.6 Payment</h3>
+    <ul>
+        <li>Late payments subject to 2% interest per month</li>
+        <li>Work may be paused if payments are overdue by 7 days</li>
+        <li>All prices in Pakistani Rupees (PKR)</li>
+        <li>Prices valid for 30 days from proposal date</li>
+    </ul>
+
+    <h2>9. Next Steps</h2>
+    
+    <div class="checklist">
+        <ol style="list-style: decimal; padding-left: 30px;">
+            <li><strong>Review this proposal</strong> - Please review all terms and pricing</li>
+            <li><strong>Sign the contract</strong> - Return signed proposal to proceed</li>
+            <li><strong>Make initial payment</strong> - 50% upfront (Rs. 60,000) to begin work</li>
+            <li><strong>Provide content</strong> - Share product images, descriptions, and business information</li>
+            <li><strong>Project kickoff</strong> - We'll schedule a meeting to discuss details</li>
+            <li><strong>Development begins</strong> - Regular updates will be provided</li>
+        </ol>
+    </div>
+
+    <h2>10. Why Choose Us</h2>
+    
+    <ul>
+        <li><strong>Professional Quality:</strong> Modern, responsive, and secure website development</li>
+        <li><strong>Proven Experience:</strong> Successfully delivered e-commerce projects</li>
+        <li><strong>Transparent Pricing:</strong> No hidden fees, clear pricing structure</li>
+        <li><strong>Ongoing Support:</strong> Continued support after project completion</li>
+        <li><strong>Client-Focused:</strong> Your success is our priority</li>
+        <li><strong>Fast Delivery:</strong> Efficient development process</li>
+    </ul>
+
+    <div class="signature-section">
+        <h2>11. Acceptance</h2>
+        <p>By signing below, both parties agree to the terms and conditions outlined in this proposal.</p>
+        
+        <div class="signature-box">
+            <p><strong>Client Signature</strong></p>
+            <div class="signature-line">
+                <p>Name: _________________________</p>
+                <p>Date: _________________________</p>
+            </div>
+        </div>
+        
+        <div class="signature-box">
+            <p><strong>Developer Signature</strong></p>
+            <div class="signature-line">
+                <p>Name: <strong>Talha Saeed</strong></p>
+                <p>Date: _________________________</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Thank you for considering our services!</strong></p>
+        <p>We look forward to working with you to create an exceptional online presence for Hasan Irfan Premium Perfumes.</p>
+        <p style="margin-top: 20px;">For questions or clarifications, please contact us.</p>
+    </div>
+
+</body>
+</html>
+
