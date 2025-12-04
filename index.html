@@ -43,10 +43,13 @@
                 <div class="header-search">
                     <input type="text" id="searchInput" placeholder="Search products..." class="search-input">
                     <button class="search-btn" id="searchBtn">🔍</button>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
                 </div>
                 <div class="header-logo">
-                    <h1 class="logo-text">Hasan Irfan</h1>
-                    <span class="logo-tagline">Premium Perfumes</span>
+                    <a href="#" id="logoLink" style="text-decoration: none; color: inherit; display: block;">
+                        <h1 class="logo-text">Hasan Irfan</h1>
+                        <span class="logo-tagline">Premium Perfumes</span>
+                    </a>
                 </div>
                 <div class="header-actions">
                     <button class="account-btn" id="accountBtn">
@@ -123,7 +126,7 @@
     </section>
 
     <!-- Main Content Area -->
-    <main class="main-content">
+    <main class="main-content" id="products">
         <div class="container">
             <div class="content-layout">
                 <!-- Left Sidebar Filters -->
@@ -231,7 +234,7 @@
     </main>
 
     <!-- Why Choose Hasan Irfan Section -->
-    <section class="why-choose-section">
+    <section class="why-choose-section" id="about">
         <div class="container">
             <h2 class="section-title">Why Choose Hasan Irfan</h2>
             <div class="why-choose-grid">
@@ -321,7 +324,7 @@
     </section>
 
     <!-- Enhanced Footer -->
-    <footer class="main-footer">
+    <footer class="main-footer" id="contact">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
@@ -532,14 +535,33 @@
                 </form>
                 <!-- Sign Up Form -->
                 <form class="auth-form" id="signUpForm" style="display: none;">
-                    <input type="text" placeholder="Full Name" required>
-                    <input type="email" placeholder="Email Address" required>
-                    <input type="tel" placeholder="Phone Number" required>
-                    <input type="password" placeholder="Password" required>
-                    <input type="password" placeholder="Confirm Password" required>
-                    <button type="submit" class="btn btn-primary">Sign Up</button>
-                    <p class="auth-link">Already have an account? <a href="#" id="switchToSignIn">Sign In</a></p>
+                    <div id="signupStep1">
+                        <input type="text" id="signupName" placeholder="Full Name" required>
+                        <input type="email" id="signupEmail" placeholder="Email Address" required>
+                        <input type="password" id="signupPassword" placeholder="Password" required minlength="6">
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                        <button type="submit" class="btn btn-primary" id="signupSubmitBtn">Send Verification Code</button>
+                        <p class="auth-link">Already have an account? <a href="#" id="switchToSignIn">Sign In</a></p>
+                    </div>
+                    <div id="signupStep2" style="display: none;">
+                        <p style="color: var(--text-light); margin-bottom: 1rem;">We've sent a 6-digit verification code to your email address. Please check your inbox and enter it below:</p>
+                        <input type="text" id="verificationCode" placeholder="Enter 6-digit code" required maxlength="6" pattern="[0-9]{6}" style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;">
+                        <button type="button" class="btn btn-primary" id="verifyCodeBtn">Verify Code</button>
+                        <button type="button" class="btn btn-secondary" id="resendCodeBtn" style="margin-top: 0.5rem; background: var(--accent-color); color: var(--text-dark);">Resend Code</button>
+                        <p class="auth-link" style="margin-top: 1rem;"><a href="#" id="backToSignup">← Back to Sign Up</a></p>
+                    </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div class="product-detail-modal" id="productDetailModal">
+        <div class="product-detail-overlay" id="productDetailOverlay"></div>
+        <div class="product-detail-content">
+            <button class="product-detail-close" id="productDetailClose">&times;</button>
+            <div class="product-detail-container" id="productDetailContainer">
+                <!-- Content will be dynamically loaded -->
             </div>
         </div>
     </div>

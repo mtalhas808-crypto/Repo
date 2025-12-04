@@ -537,6 +537,7 @@ const checkoutForm = document.getElementById('checkoutForm');
 const paymentNote = document.getElementById('paymentNote');
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
+const searchSuggestions = document.getElementById('searchSuggestions');
 const sortSelect = document.getElementById('sortSelect');
 const pagination = document.getElementById('pagination');
 const clearFiltersBtn = document.getElementById('clearFilters');
@@ -572,15 +573,64 @@ document.addEventListener('DOMContentLoaded', () => {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
     
-    // Handle navigation dropdown links
-    document.querySelectorAll('.dropdown-menu a[data-filter]').forEach(link => {
-        link.addEventListener('click', (e) => {
+    // Logo link - go to main page
+    const logoLink = document.getElementById('logoLink');
+    if (logoLink) {
+        logoLink.addEventListener('click', (e) => {
             e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Reset filters and show all products
+            searchInput.value = '';
+            filterRange.value = '';
+            filterGender.value = '';
+            filterType.value = '';
+            filterSeason.value = '';
+            filterSillage.value = '';
+            filterLasting.value = '';
+            applyFiltersAndSort();
+        });
+    }
+
+    // Handle navigation dropdown links
+    document.querySelectorAll('.dropdown-menu a, .nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
             const filter = link.dataset.filter;
-            if (filter) {
-                // Scroll to products section
-                document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-                // Apply filter (you can add filter logic here)
+            
+            // Handle hash links
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                } else if (targetId === 'products') {
+                    // Scroll to products section
+                    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Apply filter if specified
+                if (filter) {
+                    // Clear other filters
+                    searchInput.value = '';
+                    filterRange.value = '';
+                    filterGender.value = '';
+                    filterSeason.value = '';
+                    filterSillage.value = '';
+                    filterLasting.value = '';
+                    
+                    // Apply product type filter
+                    if (filter === 'all') {
+                        filterType.value = '';
+                    } else {
+                        filterType.value = filter;
+                    }
+                    
+                    setTimeout(() => {
+                        applyFiltersAndSort();
+                    }, 500);
+                }
             }
         });
     });
@@ -657,20 +707,268 @@ function setupEventListeners() {
         // In production, integrate with authentication API
     });
 
-    signUpForm.addEventListener('submit', (e) => {
+    // Signup form with email verification
+    signUpForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        alert('Sign up functionality will be implemented with backend integration.');
-        // In production, integrate with authentication API
+        
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        
+        // Validation
+        if (!name || !email || !password || !confirmPassword) {
+            alert('Please fill in all fields.');
+            return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            alert('Passwords do not match.');
+            return;
+        }
+        
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters long.');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = document.getElementById('signupSubmitBtn');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        
+        try {
+            // Send verification code via email
+            const response = await fetch('/.netlify/functions/send-email-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, name })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                // Store signup data and code token temporarily
+                sessionStorage.setItem('pendingSignup', JSON.stringify({
+                    name, email, password,
+                    codeToken: data.codeToken // Store the code token for verification
+                }));
+                
+                // Show verification step
+                document.getElementById('signupStep1').style.display = 'none';
+                document.getElementById('signupStep2').style.display = 'block';
+                document.getElementById('verificationCode').focus();
+                
+                // In development mode, show code in console
+                if (data.code) {
+                    console.log('DEV MODE - Verification code:', data.code);
+                    alert(`DEV MODE: Your verification code is ${data.code}. In production, this will be sent via email.`);
+                } else {
+                    alert('Verification code sent to your email! Please check your inbox (and spam folder).');
+                }
+            } else {
+                alert(data.error || 'Failed to send verification code. Please try again.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
     });
+    
+    // Verify code button
+    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+    if (verifyCodeBtn) {
+        verifyCodeBtn.addEventListener('click', async () => {
+            const code = document.getElementById('verificationCode').value.trim();
+            const pendingSignup = JSON.parse(sessionStorage.getItem('pendingSignup') || '{}');
+            
+            if (!code || code.length !== 6) {
+                alert('Please enter the 6-digit verification code.');
+                return;
+            }
+            
+            if (!pendingSignup.email) {
+                alert('Session expired. Please start over.');
+                document.getElementById('signupStep2').style.display = 'none';
+                document.getElementById('signupStep1').style.display = 'block';
+                return;
+            }
+            
+            // Show loading
+            verifyCodeBtn.textContent = 'Verifying...';
+            verifyCodeBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/.netlify/functions/verify-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: pendingSignup.email,
+                        code: code,
+                        name: pendingSignup.name,
+                        password: pendingSignup.password,
+                        codeToken: pendingSignup.codeToken // Include code token for verification
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Clear pending signup
+                    sessionStorage.removeItem('pendingSignup');
+                    
+                    // Close modal and show success
+                    authModal.classList.remove('open');
+                    document.body.style.overflow = '';
+                    
+                    alert('Account created successfully! You can now sign in.');
+                    
+                    // Reset form
+                    signUpForm.reset();
+                    document.getElementById('signupStep2').style.display = 'none';
+                    document.getElementById('signupStep1').style.display = 'block';
+                    
+                    // Switch to sign in tab
+                    authTabs[0].click();
+                } else {
+                    alert(data.error || 'Invalid verification code. Please try again.');
+                    verifyCodeBtn.textContent = 'Verify Code';
+                    verifyCodeBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                verifyCodeBtn.textContent = 'Verify Code';
+                verifyCodeBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Resend code button
+    const resendCodeBtn = document.getElementById('resendCodeBtn');
+    if (resendCodeBtn) {
+        resendCodeBtn.addEventListener('click', async () => {
+            const pendingSignup = JSON.parse(sessionStorage.getItem('pendingSignup') || '{}');
+            
+            if (!pendingSignup.phone) {
+                alert('Session expired. Please start over.');
+                return;
+            }
+            
+            resendCodeBtn.textContent = 'Sending...';
+            resendCodeBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/.netlify/functions/send-whatsapp-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        phone: pendingSignup.phone, 
+                        name: pendingSignup.name 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Update code token
+                    pendingSignup.codeToken = data.codeToken;
+                    sessionStorage.setItem('pendingSignup', JSON.stringify(pendingSignup));
+                    
+                    alert('Verification code resent to your WhatsApp!');
+                    if (data.code) {
+                        console.log('DEV MODE - New verification code:', data.code);
+                        alert(`DEV MODE: Your new verification code is ${data.code}. In production, this will be sent via WhatsApp.`);
+                    }
+                } else {
+                    alert(data.error || 'Failed to resend code. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                resendCodeBtn.textContent = 'Resend Code';
+                resendCodeBtn.disabled = false;
+            }
+        });
+    }
+    
+    // Back to signup button
+    const backToSignup = document.getElementById('backToSignup');
+    if (backToSignup) {
+        backToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('signupStep2').style.display = 'none';
+            document.getElementById('signupStep1').style.display = 'block';
+            sessionStorage.removeItem('pendingSignup');
+        });
+    }
+    
+    // Verification code input - only allow numbers
+    const verificationCodeInput = document.getElementById('verificationCode');
+    if (verificationCodeInput) {
+        verificationCodeInput.addEventListener('input', (e) => {
+            // Only allow numbers
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            // Limit to 6 digits
+            if (e.target.value.length > 6) {
+                e.target.value = e.target.value.slice(0, 6);
+            }
+        });
+        
+        // Auto-submit when 6 digits are entered
+        verificationCodeInput.addEventListener('keyup', (e) => {
+            if (e.target.value.length === 6 && e.key !== 'Backspace') {
+                verifyCodeBtn.click();
+            }
+        });
+    }
 
     // Search functionality
     searchBtn.addEventListener('click', () => {
         performSearch();
+        hideSearchSuggestions();
     });
 
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             performSearch();
+            hideSearchSuggestions();
+        }
+    });
+
+    // Search suggestions
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        if (query.length > 0) {
+            showSearchSuggestions(query);
+        } else {
+            hideSearchSuggestions();
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.header-search')) {
+            hideSearchSuggestions();
         }
     });
 
@@ -850,6 +1148,61 @@ function performSearch() {
     applyFiltersAndSort();
 }
 
+// Show search suggestions
+function showSearchSuggestions(query) {
+    if (!searchSuggestions) return;
+    
+    const matchingProducts = products
+        .filter(p => 
+            p.name.toLowerCase().includes(query) ||
+            p.brand.toLowerCase().includes(query) ||
+            p.type.toLowerCase().includes(query) ||
+            p.category.toLowerCase().includes(query)
+        )
+        .slice(0, 5); // Show max 5 suggestions
+    
+    if (matchingProducts.length === 0) {
+        hideSearchSuggestions();
+        return;
+    }
+    
+    searchSuggestions.innerHTML = matchingProducts.map(product => {
+        const color1 = Math.floor(Math.random()*16777215).toString(16);
+        const color2 = Math.floor(Math.random()*16777215).toString(16);
+        
+        return `
+            <div class="search-suggestion-item" data-product-id="${product.id}">
+                <div class="search-suggestion-item-image" style="background: linear-gradient(135deg, #${color1} 0%, #${color2} 100%);">
+                    ${product.image}
+                </div>
+                <div class="search-suggestion-item-info">
+                    <div class="search-suggestion-item-name">${product.name}</div>
+                    <div class="search-suggestion-item-details">${product.brand} - ${product.type}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    searchSuggestions.classList.add('show');
+    
+    // Add click handlers to suggestions
+    searchSuggestions.querySelectorAll('.search-suggestion-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const productId = parseInt(item.dataset.productId);
+            searchInput.value = '';
+            hideSearchSuggestions();
+            openProductDetail(productId);
+        });
+    });
+}
+
+// Hide search suggestions
+function hideSearchSuggestions() {
+    if (searchSuggestions) {
+        searchSuggestions.classList.remove('show');
+    }
+}
+
 // Apply filters and sort
 function applyFiltersAndSort() {
     let filtered = [...products];
@@ -926,6 +1279,9 @@ function sortProducts(productsToSort, sortType) {
 function renderProducts() {
     productsGrid.innerHTML = '';
     
+    // Update product count
+    updateProductCount();
+    
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
     const productsToRender = filteredProducts.slice(startIndex, endIndex);
@@ -952,69 +1308,49 @@ function renderProducts() {
         }
         const defaultPrice = sizes[defaultSize] || product.price;
         
-        // Create size selector HTML - no default selection
-        let sizeSelectorHTML = '';
-        if (sizeOptions.length > 1) {
-            sizeSelectorHTML = `<div class="product-sizes" data-product-id="${product.id}">
-                ${sizeOptions.map(size => 
-                    `<span class="size-option" data-size="${size}" data-price="${sizes[size]}">${size}</span>`
-                ).join('')}
-            </div>`;
-        } else if (sizeOptions.length === 1) {
-            sizeSelectorHTML = `<p class="product-size-info">${defaultSize} - PKR ${defaultPrice.toLocaleString()}</p>`;
-        }
-        
+        // Remove size selector, price, and add to cart from main page - only shown in product detail page
         productCard.innerHTML = `
-            <div class="product-image" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)} 0%, #${Math.floor(Math.random()*16777215).toString(16)} 100%);">
+            <div class="product-image" style="background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)} 0%, #${Math.floor(Math.random()*16777215).toString(16)} 100%); cursor: pointer;" data-product-id="${product.id}">
                 <span style="font-size: 4rem;">${product.image}</span>
             </div>
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
                 <p class="product-category">${product.brand} - ${product.type} (${product.category})</p>
-                ${sizeSelectorHTML}
-                <p class="product-price" id="price-${product.id}">PKR ${defaultPrice.toLocaleString()}</p>
-                <button class="add-to-cart" data-product-id="${product.id}" data-selected-size="${defaultSize}" data-default-size="${defaultSize}">Add to Cart</button>
             </div>
         `;
         productsGrid.appendChild(productCard);
-    });
-
-    // Add event listeners for size selection
-    document.querySelectorAll('.product-sizes').forEach(sizeContainer => {
-        sizeContainer.addEventListener('click', (event) => {
-            const selectedSizeElement = event.target;
-            if (selectedSizeElement.classList.contains('size-option')) {
-                const productId = sizeContainer.dataset.productId;
-                const product = products.find(p => p.id == productId);
-                const newSize = selectedSizeElement.dataset.size;
-                const newPrice = parseFloat(selectedSizeElement.dataset.price);
-
-                // Update active class
-                Array.from(sizeContainer.children).forEach(span => {
-                    span.classList.remove('selected');
-                });
-                selectedSizeElement.classList.add('selected');
-
-                // Update displayed price
-                const productPriceElement = sizeContainer.closest('.product-info').querySelector('.product-price');
-                productPriceElement.textContent = `PKR ${newPrice.toLocaleString()}`;
-
-                // Update the add to cart button's selected size
-                const addToCartBtn = sizeContainer.closest('.product-info').querySelector('.add-to-cart');
-                addToCartBtn.dataset.selectedSize = newSize;
-                
-            }
+        
+        // Make product image clickable
+        const productImage = productCard.querySelector('.product-image');
+        productImage.addEventListener('click', () => {
+            openProductDetail(product.id);
         });
     });
+}
 
-    // Add event listeners for Add to Cart buttons
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const productId = parseInt(event.target.dataset.productId);
-            const selectedSize = event.target.dataset.selectedSize;
-            addToCart(productId, selectedSize, 1); // Always add quantity 1 from product page
-        });
-    });
+// Update product count display
+function updateProductCount() {
+    const productsTitle = document.querySelector('.products-title');
+    if (productsTitle) {
+        // Remove existing count if any
+        const existingCount = productsTitle.querySelector('.product-count');
+        if (existingCount) {
+            existingCount.remove();
+        }
+        
+        // Get total products count (actual array length)
+        const totalProducts = products.length;
+        
+        // Add new count - show filtered count if different from total
+        const count = document.createElement('span');
+        count.className = 'product-count';
+        if (filteredProducts.length === totalProducts) {
+            count.textContent = ` (${totalProducts} products)`;
+        } else {
+            count.textContent = ` (${filteredProducts.length} of ${totalProducts} products)`;
+        }
+        productsTitle.appendChild(count);
+    }
 }
 
 // Render Pagination
@@ -1288,4 +1624,477 @@ checkoutModal.addEventListener('transitionend', () => {
     if (!checkoutModal.classList.contains('open')) {
         document.body.style.overflow = '';
     }
+});
+
+// Product Detail Modal Functionality
+const productDetailModal = document.getElementById('productDetailModal');
+const productDetailContainer = document.getElementById('productDetailContainer');
+const productDetailClose = document.getElementById('productDetailClose');
+const productDetailOverlay = document.getElementById('productDetailOverlay');
+
+// Sample reviews data (in production, this would come from a backend)
+const productReviews = {
+    1: [
+        { name: "Ahmed Khan", date: "2024-11-15", rating: 5, text: "Amazing fragrance! Long lasting and perfect for special occasions." },
+        { name: "Fatima Ali", date: "2024-11-10", rating: 4, text: "Great quality, love the scent. Would definitely buy again." },
+        { name: "Hassan Malik", date: "2024-11-05", rating: 5, text: "Best perfume I've ever purchased. Highly recommended!" }
+    ],
+    2: [
+        { name: "Sara Ahmed", date: "2024-11-12", rating: 5, text: "Perfect unisex fragrance. My husband and I both love it!" },
+        { name: "Omar Sheikh", date: "2024-11-08", rating: 4, text: "Good value for money. Nice scent, lasts all day." }
+    ]
+};
+
+// Generate random reviews for products without reviews
+function getProductReviews(productId) {
+    if (productReviews[productId]) {
+        return productReviews[productId];
+    }
+    // Generate some sample reviews
+    const names = ["Ahmed Khan", "Fatima Ali", "Hassan Malik", "Sara Ahmed", "Omar Sheikh", "Ayesha Raza", "Bilal Hassan", "Zainab Ali"];
+    const reviews = [];
+    const numReviews = Math.floor(Math.random() * 5) + 2; // 2-6 reviews
+    
+    for (let i = 0; i < numReviews; i++) {
+        const rating = Math.floor(Math.random() * 2) + 4; // 4-5 stars
+        const daysAgo = Math.floor(Math.random() * 30);
+        const date = new Date();
+        date.setDate(date.getDate() - daysAgo);
+        reviews.push({
+            name: names[Math.floor(Math.random() * names.length)],
+            date: date.toISOString().split('T')[0],
+            rating: rating,
+            text: rating === 5 ? "Excellent product! Highly recommended." : "Good quality, satisfied with purchase."
+        });
+    }
+    return reviews;
+}
+
+// Calculate average rating
+function calculateAverageRating(reviews) {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return (sum / reviews.length).toFixed(1);
+}
+
+// Render star rating
+function renderStars(rating, maxRating = 5) {
+    let stars = '';
+    for (let i = 1; i <= maxRating; i++) {
+        if (i <= Math.floor(rating)) {
+            stars += '★';
+        } else if (i - 0.5 <= rating) {
+            stars += '½';
+        } else {
+            stars += '☆';
+        }
+    }
+    return stars;
+}
+
+// Get product description
+function getProductDescription(product) {
+    const descriptions = {
+        'oil': `Experience the rich, concentrated essence of ${product.name}. This premium oil fragrance offers intense, long-lasting scent that develops beautifully on the skin. Perfect for those who appreciate deep, luxurious aromas.`,
+        'niche-spray': `Discover the unique character of ${product.name}. This niche fragrance offers a distinctive scent profile that sets you apart. Crafted with premium ingredients for exceptional quality and longevity.`,
+        'impressions': `Experience the iconic ${product.name} fragrance. This high-quality impression captures the essence of the original designer scent, offering luxury at an accessible price point.`
+    };
+    return descriptions[product.productType] || `Premium quality ${product.name} fragrance. Experience luxury and sophistication with this exquisite scent.`;
+}
+
+// Get product notes
+function getProductNotes(product) {
+    const notes = {
+        'oil': [
+            'Concentrated oil formula for intense fragrance',
+            'Long-lasting scent that develops over time',
+            'Apply to pulse points for best results',
+            'Available in multiple sizes to suit your needs',
+            '100% authentic premium quality'
+        ],
+        'niche-spray': [
+            'Unique niche fragrance composition',
+            'Premium spray format for easy application',
+            'Long-lasting projection and sillage',
+            'Distinctive scent profile',
+            'Authentic premium quality'
+        ],
+        'impressions': [
+            'High-quality impression of designer fragrance',
+            'Authentic scent profile',
+            'Long-lasting performance',
+            'Great value for money',
+            'Premium quality guarantee'
+        ]
+    };
+    return notes[product.productType] || [
+        'Premium quality fragrance',
+        'Long-lasting scent',
+        'Authentic product',
+        'Satisfaction guaranteed'
+    ];
+}
+
+// Get frequently bought together products
+function getFrequentlyBoughtTogether(productId) {
+    const currentProduct = products.find(p => p.id === productId);
+    if (!currentProduct) return [];
+    
+    // Find similar products (same category or type)
+    const similar = products
+        .filter(p => p.id !== productId && (p.category === currentProduct.category || p.type === currentProduct.type))
+        .slice(0, 4);
+    
+    return similar;
+}
+
+// Open product detail modal
+function openProductDetail(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    const reviews = getProductReviews(productId);
+    const avgRating = calculateAverageRating(reviews);
+    const description = getProductDescription(product);
+    const notes = getProductNotes(product);
+    const frequentlyBought = getFrequentlyBoughtTogether(productId);
+    
+    // Get available sizes
+    const sizes = product.sizes || {};
+    const sizeOptions = Object.keys(sizes).filter(size => sizes[size] && sizes[size] > 0 && !isNaN(sizes[size]));
+    const defaultSize = sizeOptions[0] || '5ML';
+    const defaultPrice = sizes[defaultSize] || product.price;
+    
+    // Generate random gradient for product image
+    const color1 = Math.floor(Math.random()*16777215).toString(16);
+    const color2 = Math.floor(Math.random()*16777215).toString(16);
+    
+    productDetailContainer.innerHTML = `
+        <!-- Main Product Section -->
+        <div class="product-detail-main">
+            <div class="product-detail-image" style="background: linear-gradient(135deg, #${color1} 0%, #${color2} 100%);">
+                <span style="font-size: 8rem;">${product.image}</span>
+            </div>
+            <div class="product-detail-info">
+                <h1>${product.name}</h1>
+                <div class="product-detail-rating">
+                    <div class="product-detail-stars">${renderStars(avgRating)}</div>
+                    <span class="product-detail-review-count">(${reviews.length} reviews)</span>
+                </div>
+                <p class="product-detail-price" id="productDetailPrice">PKR ${defaultPrice.toLocaleString()}</p>
+                <p class="product-detail-description">${description}</p>
+                
+                <!-- Size Selection -->
+                <div class="product-detail-sizes">
+                    <h3>Select Size</h3>
+                    <div class="product-detail-size-options" id="productDetailSizeOptions">
+                        ${sizeOptions.map(size => 
+                            `<span class="product-detail-size-option ${size === defaultSize ? 'selected' : ''}" data-size="${size}" data-price="${sizes[size]}">${size}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <!-- Quantity Selection -->
+                <div class="product-detail-quantity">
+                    <h3>Quantity</h3>
+                    <div class="product-detail-quantity-controls">
+                        <button class="product-detail-quantity-btn" id="productDetailQuantityMinus">−</button>
+                        <input type="number" class="product-detail-quantity-input" id="productDetailQuantityInput" value="1" min="1" max="10">
+                        <button class="product-detail-quantity-btn" id="productDetailQuantityPlus">+</button>
+                    </div>
+                </div>
+                
+                <!-- Gift Toggle -->
+                <div class="product-detail-gift-toggle">
+                    <label>
+                        <input type="checkbox" id="productDetailGiftToggle">
+                        <span>Is this a gift?</span>
+                    </label>
+                    <div class="product-detail-packaging" id="productDetailPackaging">
+                        <h4>Select Packaging</h4>
+                        <div class="product-detail-packaging-options">
+                            <label class="product-detail-packaging-option">
+                                <input type="radio" name="packaging" value="standard" checked>
+                                <span>Standard Gift Box (Free)</span>
+                            </label>
+                            <label class="product-detail-packaging-option">
+                                <input type="radio" name="packaging" value="premium">
+                                <span>Premium Gift Box (+PKR 500)</span>
+                            </label>
+                            <label class="product-detail-packaging-option">
+                                <input type="radio" name="packaging" value="luxury">
+                                <span>Luxury Gift Box (+PKR 1,000)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="product-detail-add-to-cart" id="productDetailAddToCart" data-product-id="${product.id}" data-selected-size="${defaultSize}">Add to Cart</button>
+            </div>
+        </div>
+        
+        <!-- Product Notes -->
+        <div class="product-detail-notes">
+            <h3>Product Notes</h3>
+            <ul>
+                ${notes.map(note => `<li>${note}</li>`).join('')}
+            </ul>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="product-detail-reviews">
+            <div class="product-detail-reviews-header">
+                <h3>Customer Reviews</h3>
+                <button class="write-review-btn" id="writeReviewBtn">Write a Review</button>
+            </div>
+            
+            <!-- Review List -->
+            <div class="product-detail-review-list">
+                ${reviews.map(review => `
+                    <div class="product-detail-review-item">
+                        <div class="product-detail-review-header">
+                            <span class="product-detail-review-name">${review.name}</span>
+                            <span class="product-detail-review-date">${new Date(review.date).toLocaleDateString()}</span>
+                        </div>
+                        <div class="product-detail-review-stars">${renderStars(review.rating)}</div>
+                        <p class="product-detail-review-text">${review.text}</p>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <!-- Write Review Form -->
+            <div class="write-review-form" id="writeReviewForm">
+                <h4>Write a Review</h4>
+                <form id="reviewForm">
+                    <input type="text" placeholder="Your Name" required id="reviewName">
+                    <input type="email" placeholder="Your Email" required id="reviewEmail">
+                    <div class="rating-input" id="reviewRating">
+                        <span class="rating-star" data-rating="1">☆</span>
+                        <span class="rating-star" data-rating="2">☆</span>
+                        <span class="rating-star" data-rating="3">☆</span>
+                        <span class="rating-star" data-rating="4">☆</span>
+                        <span class="rating-star" data-rating="5">☆</span>
+                    </div>
+                    <textarea placeholder="Write your review..." required id="reviewText"></textarea>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Frequently Bought Together -->
+        ${frequentlyBought.length > 0 ? `
+        <div class="frequently-bought-together">
+            <h3>Frequently Bought Together</h3>
+            <div class="frequently-bought-grid">
+                ${frequentlyBought.map(item => {
+                    const itemSizes = item.sizes || {};
+                    const itemSizeOptions = Object.keys(itemSizes).filter(size => itemSizes[size] && itemSizes[size] > 0 && !isNaN(itemSizes[size]));
+                    const itemDefaultSize = itemSizeOptions[0] || '5ML';
+                    const itemDefaultPrice = itemSizes[itemDefaultSize] || item.price;
+                    const itemColor1 = Math.floor(Math.random()*16777215).toString(16);
+                    const itemColor2 = Math.floor(Math.random()*16777215).toString(16);
+                    return `
+                        <div class="frequently-bought-item" data-product-id="${item.id}">
+                            <div class="frequently-bought-item-image" style="background: linear-gradient(135deg, #${itemColor1} 0%, #${itemColor2} 100%);">
+                                <span style="font-size: 3rem;">${item.image}</span>
+                            </div>
+                            <div class="frequently-bought-item-name">${item.name}</div>
+                            <div class="frequently-bought-item-price">PKR ${itemDefaultPrice.toLocaleString()}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+        ` : ''}
+        
+        <!-- Email Subscription -->
+        <div class="product-detail-subscription">
+            <h3>Stay Updated</h3>
+            <p>Subscribe to our newsletter for exclusive offers and new arrivals</p>
+            <form class="product-detail-subscription-form" id="productDetailSubscriptionForm">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="product-detail-features">
+            <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">Why Choose Hasan Irfan</h3>
+            <div class="product-detail-features-grid">
+                <div class="product-detail-feature-item">
+                    <div class="product-detail-feature-icon">💎</div>
+                    <h4>Premium Quality</h4>
+                    <p>We source only the finest fragrances from around the world</p>
+                </div>
+                <div class="product-detail-feature-item">
+                    <div class="product-detail-feature-icon">🚚</div>
+                    <h4>Fast Delivery</h4>
+                    <p>Free shipping on orders over PKR 5,000</p>
+                </div>
+                <div class="product-detail-feature-item">
+                    <div class="product-detail-feature-icon">💯</div>
+                    <h4>Authentic Products</h4>
+                    <p>100% authentic fragrances guaranteed</p>
+                </div>
+                <div class="product-detail-feature-item">
+                    <div class="product-detail-feature-icon">↩️</div>
+                    <h4>Easy Returns</h4>
+                    <p>30-day return policy with easy exchanges</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add event listeners
+    setupProductDetailEvents(product, sizeOptions, sizes);
+    
+    // Show modal
+    productDetailModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+// Setup product detail event listeners
+function setupProductDetailEvents(product, sizeOptions, sizes) {
+    // Size selection
+    document.querySelectorAll('.product-detail-size-option').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('.product-detail-size-option').forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            const newPrice = parseFloat(option.dataset.price);
+            document.getElementById('productDetailPrice').textContent = `PKR ${newPrice.toLocaleString()}`;
+            document.getElementById('productDetailAddToCart').dataset.selectedSize = option.dataset.size;
+        });
+    });
+    
+    // Quantity controls
+    const quantityInput = document.getElementById('productDetailQuantityInput');
+    const quantityMinus = document.getElementById('productDetailQuantityMinus');
+    const quantityPlus = document.getElementById('productDetailQuantityPlus');
+    
+    quantityMinus.addEventListener('click', () => {
+        const current = parseInt(quantityInput.value);
+        if (current > 1) {
+            quantityInput.value = current - 1;
+        }
+    });
+    
+    quantityPlus.addEventListener('click', () => {
+        const current = parseInt(quantityInput.value);
+        if (current < 10) {
+            quantityInput.value = current + 1;
+        }
+    });
+    
+    // Gift toggle
+    const giftToggle = document.getElementById('productDetailGiftToggle');
+    const packagingDiv = document.getElementById('productDetailPackaging');
+    
+    if (giftToggle && packagingDiv) {
+        // Ensure packaging is hidden initially
+        packagingDiv.classList.remove('show');
+        
+        giftToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                packagingDiv.classList.add('show');
+            } else {
+                packagingDiv.classList.remove('show');
+            }
+        });
+    }
+    
+    // Add to cart
+    document.getElementById('productDetailAddToCart').addEventListener('click', () => {
+        const selectedSize = document.getElementById('productDetailAddToCart').dataset.selectedSize;
+        const quantity = parseInt(quantityInput.value);
+        addToCart(product.id, selectedSize, quantity);
+        
+        // Show success message
+        const btn = document.getElementById('productDetailAddToCart');
+        const originalText = btn.textContent;
+        btn.textContent = 'Added to Cart!';
+        btn.style.background = '#28a745';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '';
+        }, 2000);
+    });
+    
+    // Write review button
+    const writeReviewBtn = document.getElementById('writeReviewBtn');
+    const writeReviewForm = document.getElementById('writeReviewForm');
+    if (writeReviewBtn && writeReviewForm) {
+        writeReviewBtn.addEventListener('click', () => {
+            writeReviewForm.classList.add('show');
+            // Scroll to review form
+            writeReviewForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    }
+    
+    // Rating stars
+    const ratingStars = document.querySelectorAll('.rating-star');
+    let selectedRating = 0;
+    ratingStars.forEach(star => {
+        star.addEventListener('click', () => {
+            const rating = parseInt(star.dataset.rating);
+            selectedRating = rating;
+            document.querySelectorAll('.rating-star').forEach((s, index) => {
+                if (index < rating) {
+                    s.textContent = '★';
+                    s.classList.add('active');
+                } else {
+                    s.textContent = '☆';
+                    s.classList.remove('active');
+                }
+            });
+        });
+    });
+    
+    // Review form submission
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (selectedRating === 0) {
+                alert('Please select a rating by clicking on the stars.');
+                return;
+            }
+            alert('Thank you for your review! It will be published after moderation.');
+            if (writeReviewForm) {
+                writeReviewForm.classList.remove('show');
+            }
+            reviewForm.reset();
+            selectedRating = 0;
+            // Reset stars
+            document.querySelectorAll('.rating-star').forEach(s => {
+                s.textContent = '☆';
+                s.classList.remove('active');
+            });
+        });
+    }
+    
+    // Frequently bought together items
+    document.querySelectorAll('.frequently-bought-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const productId = parseInt(item.dataset.productId);
+            openProductDetail(productId);
+        });
+    });
+    
+    // Subscription form
+    document.getElementById('productDetailSubscriptionForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Thank you for subscribing!');
+        e.target.reset();
+    });
+}
+
+// Close product detail modal
+productDetailClose.addEventListener('click', () => {
+    productDetailModal.classList.remove('open');
+    document.body.style.overflow = '';
+});
+
+productDetailOverlay.addEventListener('click', () => {
+    productDetailModal.classList.remove('open');
+    document.body.style.overflow = '';
 });
