@@ -755,7 +755,15 @@ function setupEventListeners() {
                 body: JSON.stringify({ email, name })
             });
             
+            // Check if response is ok
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Response error:', response.status, errorText);
+                throw new Error(`Server error: ${response.status}`);
+            }
+            
             const data = await response.json();
+            console.log('Response data:', data); // Debug log
             
             if (response.ok && data.success) {
                 // Store signup data and code token temporarily
@@ -770,16 +778,17 @@ function setupEventListeners() {
                 document.getElementById('verificationCode').focus();
                 
                 // Show appropriate message based on whether email was sent
-                if (data.emailSent) {
+                if (data.emailSent === true) {
                     // Email was successfully sent
                     alert('✅ Verification code sent to your email! Please check your inbox (and spam folder).');
                 } else if (data.code) {
-                    // Dev mode - email service not configured
+                    // Dev mode - email service not configured, show code
                     console.log('DEV MODE - Verification code:', data.code);
                     alert(`🔧 DEV MODE: Your verification code is ${data.code}.\n\nIn production, this will be sent to your email.`);
                 } else {
-                    // Fallback message
-                    alert('Verification code generated. Please check your email (or console in dev mode).');
+                    // Fallback - try to get code from response or show generic message
+                    console.warn('No code or emailSent flag in response:', data);
+                    alert('Verification code generated. Please check your email (or console in dev mode).\n\nIf you see this message, check the browser console for the code.');
                 }
             } else {
                 alert(data.error || 'Failed to send verification code. Please try again.');
@@ -787,8 +796,8 @@ function setupEventListeners() {
                 submitBtn.disabled = false;
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            console.error('Error sending verification code:', error);
+            alert(`Error: ${error.message || 'Failed to send verification code. Please check console for details.'}`);
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }

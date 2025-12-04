@@ -156,18 +156,26 @@ Hasan Irfan Perfumes Team
         // Always return code if email wasn't sent (dev mode or no email service configured)
         const isDevMode = process.env.NETLIFY_DEV || !messageSent;
         
+        // Build response object
+        const responseData = {
+            success: true,
+            message: messageSent 
+                ? 'Verification code sent to your email!' 
+                : 'Verification code generated (check console in dev mode)',
+            codeToken: codeToken,
+            emailSent: messageSent // Flag to indicate if email was actually sent
+        };
+        
+        // Always include code if email wasn't sent (for dev/testing)
+        if (!messageSent) {
+            responseData.code = verificationCode;
+        }
+        
+        console.log('Sending response:', { ...responseData, codeToken: '[REDACTED]' }); // Log without exposing token
+        
         return {
             statusCode: 200,
-            body: JSON.stringify({ 
-                success: true,
-                message: messageSent 
-                    ? 'Verification code sent to your email!' 
-                    : 'Verification code generated (check console in dev mode)',
-                codeToken: codeToken,
-                emailSent: messageSent, // Flag to indicate if email was actually sent
-                // Return code in dev mode or when email service is not configured
-                ...(isDevMode && { code: verificationCode })
-            }),
+            body: JSON.stringify(responseData),
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
