@@ -769,12 +769,17 @@ function setupEventListeners() {
                 document.getElementById('signupStep2').style.display = 'block';
                 document.getElementById('verificationCode').focus();
                 
-                // In development mode, show code in console
-                if (data.code) {
+                // Show appropriate message based on whether email was sent
+                if (data.emailSent) {
+                    // Email was successfully sent
+                    alert('✅ Verification code sent to your email! Please check your inbox (and spam folder).');
+                } else if (data.code) {
+                    // Dev mode - email service not configured
                     console.log('DEV MODE - Verification code:', data.code);
-                    alert(`DEV MODE: Your verification code is ${data.code}. In production, this will be sent via email.`);
+                    alert(`🔧 DEV MODE: Your verification code is ${data.code}.\n\nIn production, this will be sent to your email.`);
                 } else {
-                    alert('Verification code sent to your email! Please check your inbox (and spam folder).');
+                    // Fallback message
+                    alert('Verification code generated. Please check your email (or console in dev mode).');
                 }
             } else {
                 alert(data.error || 'Failed to send verification code. Please try again.');

@@ -164,6 +164,7 @@ Hasan Irfan Perfumes Team
                     ? 'Verification code sent to your email!' 
                     : 'Verification code generated (check console in dev mode)',
                 codeToken: codeToken,
+                emailSent: messageSent, // Flag to indicate if email was actually sent
                 // Return code in dev mode or when email service is not configured
                 ...(isDevMode && { code: verificationCode })
             }),
