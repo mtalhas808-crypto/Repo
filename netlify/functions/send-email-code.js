@@ -1,6 +1,19 @@
 // Netlify Function to send email verification code
 // Uses SendGrid (free tier: 100 emails/day) or can be configured for other services
 
+// Import email services (optional - only if API keys are configured)
+let sgMail, Resend;
+try {
+    sgMail = require('@sendgrid/mail');
+} catch (e) {
+    // SendGrid not available
+}
+try {
+    Resend = require('resend');
+} catch (e) {
+    // Resend not available
+}
+
 exports.handler = async (event, context) => {
     // Only allow POST requests
     if (event.httpMethod !== 'POST') {
@@ -93,9 +106,8 @@ Hasan Irfan Perfumes Team
         
         // Option 1: SendGrid (Recommended - Free tier: 100 emails/day)
         const sendGridApiKey = process.env.SENDGRID_API_KEY;
-        if (sendGridApiKey) {
+        if (sendGridApiKey && sgMail) {
             try {
-                const sgMail = require('@sendgrid/mail');
                 sgMail.setApiKey(sendGridApiKey);
                 
                 const msg = {
@@ -115,12 +127,11 @@ Hasan Irfan Perfumes Team
         }
         
         // Option 2: Resend (Alternative - Free tier: 3,000 emails/month)
-        if (!messageSent) {
+        if (!messageSent && Resend) {
             const resendApiKey = process.env.RESEND_API_KEY;
             if (resendApiKey) {
                 try {
-                    const resend = require('resend');
-                    const resendClient = new resend.Resend(resendApiKey);
+                    const resendClient = new Resend.Resend(resendApiKey);
                     
                     await resendClient.emails.send({
                         from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
@@ -142,6 +153,9 @@ Hasan Irfan Perfumes Team
             // In development, return code for testing
         }
         
+        // Always return code if email wasn't sent (dev mode or no email service configured)
+        const isDevMode = process.env.NETLIFY_DEV || !messageSent;
+        
         return {
             statusCode: 200,
             body: JSON.stringify({ 
@@ -150,8 +164,8 @@ Hasan Irfan Perfumes Team
                     ? 'Verification code sent to your email!' 
                     : 'Verification code generated (check console in dev mode)',
                 codeToken: codeToken,
-                // In development only - remove in production
-                ...(process.env.NETLIFY_DEV && { code: verificationCode })
+                // Return code in dev mode or when email service is not configured
+                ...(isDevMode && { code: verificationCode })
             }),
             headers: {
                 'Content-Type': 'application/json',
