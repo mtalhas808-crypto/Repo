@@ -181,7 +181,13 @@ Hasan Irfan Perfumes Team
                 ? 'Verification code sent to your email!' 
                 : 'Verification code generated (check console in dev mode)',
             codeToken: codeToken,
-            emailSent: messageSent // Flag to indicate if email was actually sent
+            emailSent: messageSent, // Flag to indicate if email was actually sent
+            debug: {
+                resendModuleAvailable: !!Resend,
+                resendApiKeySet: !!resendApiKey,
+                sendGridAvailable: !!sgMail,
+                sendGridApiKeySet: !!process.env.SENDGRID_API_KEY
+            }
         };
         
         // Always include code if email wasn't sent (for dev/testing)
