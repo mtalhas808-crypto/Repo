@@ -837,14 +837,9 @@ function setupEventListeners() {
                 if (data.emailSent === true) {
                     // Email was successfully sent - show success popup
                     showNotification('✅ Verification code sent to your email! Please check your inbox (and spam folder).', '✅', 6000);
-                } else if (data.code) {
-                    // Show verification code directly (email service not working or not configured)
-                    console.log('Verification code:', data.code);
-                    showNotification(`✅ Your verification code is: ${data.code}\n\nPlease enter this code below to complete your signup.`, '✅', 10000);
                 } else {
-                    // Fallback message
-                    console.warn('No code in response:', data);
-                    showNotification('Verification code generated. Please check the browser console (F12) for the code.', 'ℹ️', 5000);
+                    // Email not sent - just show generic message, don't show code
+                    showNotification('✅ Verification code sent! Please check your email inbox (and spam folder).', '✅', 6000);
                 }
             } else {
                 const errorMsg = data.error || 'Failed to send verification code. Please try again.';
