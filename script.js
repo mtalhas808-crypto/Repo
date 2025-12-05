@@ -708,6 +708,42 @@ function setupEventListeners() {
     });
 
     // Signup form with email verification
+    // Notification popup function
+    function showNotification(message, icon = '✅', duration = 5000) {
+        const popup = document.getElementById('notificationPopup');
+        const messageEl = document.getElementById('notificationMessage');
+        const iconEl = document.getElementById('notificationIcon');
+        const closeBtn = document.getElementById('notificationClose');
+        
+        // Set message and icon
+        messageEl.textContent = message;
+        iconEl.textContent = icon;
+        
+        // Show popup
+        popup.classList.remove('hide');
+        popup.classList.add('show');
+        
+        // Auto-hide after duration
+        const autoHide = setTimeout(() => {
+            hideNotification();
+        }, duration);
+        
+        // Close button handler
+        closeBtn.onclick = () => {
+            clearTimeout(autoHide);
+            hideNotification();
+        };
+    }
+    
+    function hideNotification() {
+        const popup = document.getElementById('notificationPopup');
+        popup.classList.remove('show');
+        popup.classList.add('hide');
+        setTimeout(() => {
+            popup.classList.remove('hide');
+        }, 300);
+    }
+
     signUpForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -718,24 +754,24 @@ function setupEventListeners() {
         
         // Validation
         if (!name || !email || !password || !confirmPassword) {
-            alert('Please fill in all fields.');
+            showNotification('Please fill in all fields.', '⚠️', 3000);
             return;
         }
         
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            alert('Please enter a valid email address.');
+            showNotification('Please enter a valid email address.', '⚠️', 3000);
             return;
         }
         
         if (password !== confirmPassword) {
-            alert('Passwords do not match.');
+            showNotification('Passwords do not match.', '⚠️', 3000);
             return;
         }
         
         if (password.length < 6) {
-            alert('Password must be at least 6 characters long.');
+            showNotification('Password must be at least 6 characters long.', '⚠️', 3000);
             return;
         }
         
@@ -779,25 +815,25 @@ function setupEventListeners() {
                 
                 // Show appropriate message based on whether email was sent
                 if (data.emailSent === true) {
-                    // Email was successfully sent
-                    alert('✅ Verification code sent to your email! Please check your inbox (and spam folder).');
+                    // Email was successfully sent - show success popup
+                    showNotification('✅ Verification code sent to your email! Please check your inbox (and spam folder).', '✅', 6000);
                 } else if (data.code) {
                     // Show verification code directly (no email service needed)
                     console.log('Verification code:', data.code);
-                    alert(`✅ Your verification code is: ${data.code}\n\nPlease enter this code below to complete your signup.`);
+                    showNotification(`✅ Your verification code is: ${data.code}\n\nPlease enter this code below to complete your signup.`, '✅', 8000);
                 } else {
                     // Fallback message
                     console.warn('No code in response:', data);
-                    alert('Verification code generated. Please check the browser console (F12) for the code.');
+                    showNotification('Verification code generated. Please check the browser console (F12) for the code.', 'ℹ️', 5000);
                 }
             } else {
-                alert(data.error || 'Failed to send verification code. Please try again.');
+                showNotification(data.error || 'Failed to send verification code. Please try again.', '❌', 4000);
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
         } catch (error) {
             console.error('Error sending verification code:', error);
-            alert(`Error: ${error.message || 'Failed to send verification code. Please check console for details.'}`);
+            showNotification(`Error: ${error.message || 'Failed to send verification code. Please check console for details.'}`, '❌', 4000);
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
