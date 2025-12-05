@@ -127,35 +127,42 @@ Hasan Irfan Perfumes Team
         }
         
         // Option 2: Resend (Alternative - Free tier: 3,000 emails/month)
-        if (!messageSent && Resend) {
-            const resendApiKey = process.env.RESEND_API_KEY;
-            if (resendApiKey) {
-                try {
-                    const resendClient = new Resend(resendApiKey);
-                    
-                    const result = await resendClient.emails.send({
-                        from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-                        to: email,
-                        subject: emailSubject,
-                        html: emailHtml,
-                    });
-                    
-                    console.log('Resend email sent successfully:', result);
-                    messageSent = true;
-                } catch (resendError) {
-                    console.error('Resend error details:', {
-                        message: resendError.message,
-                        statusCode: resendError.statusCode,
-                        response: resendError.response,
-                        stack: resendError.stack
-                    });
-                    // Don't throw - fall through to show code in popup
-                }
-            } else {
-                console.log('Resend API key not found in environment variables');
+        const resendApiKey = process.env.RESEND_API_KEY;
+        console.log('Resend check:', {
+            ResendModule: !!Resend,
+            hasApiKey: !!resendApiKey,
+            apiKeyPrefix: resendApiKey ? resendApiKey.substring(0, 10) + '...' : 'none'
+        });
+        
+        if (!messageSent && Resend && resendApiKey) {
+            try {
+                const resendClient = new Resend(resendApiKey);
+                
+                const emailResult = await resendClient.emails.send({
+                    from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+                    to: email,
+                    subject: emailSubject,
+                    html: emailHtml,
+                });
+                
+                console.log('Resend email sent successfully:', JSON.stringify(emailResult));
+                messageSent = true;
+            } catch (resendError) {
+                console.error('Resend error details:', {
+                    message: resendError.message,
+                    statusCode: resendError.statusCode,
+                    response: resendError.response,
+                    error: resendError
+                });
+                // Don't throw - fall through to show code in popup
             }
         } else {
-            console.log('Resend module not available:', !Resend);
+            if (!Resend) {
+                console.log('Resend module not loaded');
+            }
+            if (!resendApiKey) {
+                console.log('Resend API key not found in environment variables');
+            }
         }
         
         // Option 3: Development mode - log code
