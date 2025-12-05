@@ -136,8 +136,7 @@ Hasan Irfan Perfumes Team
         
         if (!messageSent && Resend && resendApiKey) {
             try {
-                const { Resend: ResendClient } = Resend;
-                const resendClient = new ResendClient(resendApiKey);
+                const resendClient = new Resend(resendApiKey);
                 
                 const emailResult = await resendClient.emails.send({
                     from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
