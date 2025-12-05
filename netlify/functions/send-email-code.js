@@ -9,7 +9,8 @@ try {
     // SendGrid not available
 }
 try {
-    Resend = require('resend');
+    const resendModule = require('resend');
+    Resend = resendModule.Resend || resendModule.default || resendModule;
 } catch (e) {
     // Resend not available
 }
