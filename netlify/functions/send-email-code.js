@@ -133,18 +133,29 @@ Hasan Irfan Perfumes Team
                 try {
                     const resendClient = new Resend(resendApiKey);
                     
-                    await resendClient.emails.send({
+                    const result = await resendClient.emails.send({
                         from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
                         to: email,
                         subject: emailSubject,
                         html: emailHtml,
                     });
                     
+                    console.log('Resend email sent successfully:', result);
                     messageSent = true;
                 } catch (resendError) {
-                    console.error('Resend error:', resendError);
+                    console.error('Resend error details:', {
+                        message: resendError.message,
+                        statusCode: resendError.statusCode,
+                        response: resendError.response,
+                        stack: resendError.stack
+                    });
+                    // Don't throw - fall through to show code in popup
                 }
+            } else {
+                console.log('Resend API key not found in environment variables');
             }
+        } else {
+            console.log('Resend module not available:', !Resend);
         }
         
         // Option 3: Development mode - log code

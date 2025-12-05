@@ -710,29 +710,49 @@ function setupEventListeners() {
     // Signup form with email verification
     // Notification popup function
     function showNotification(message, icon = '✅', duration = 5000) {
-        const popup = document.getElementById('notificationPopup');
-        const messageEl = document.getElementById('notificationMessage');
-        const iconEl = document.getElementById('notificationIcon');
-        const closeBtn = document.getElementById('notificationClose');
-        
-        // Set message and icon
-        messageEl.textContent = message;
-        iconEl.textContent = icon;
-        
-        // Show popup
-        popup.classList.remove('hide');
-        popup.classList.add('show');
-        
-        // Auto-hide after duration
-        const autoHide = setTimeout(() => {
-            hideNotification();
-        }, duration);
-        
-        // Close button handler
-        closeBtn.onclick = () => {
-            clearTimeout(autoHide);
-            hideNotification();
-        };
+        try {
+            const popup = document.getElementById('notificationPopup');
+            const messageEl = document.getElementById('notificationMessage');
+            const iconEl = document.getElementById('notificationIcon');
+            const closeBtn = document.getElementById('notificationClose');
+            
+            if (!popup || !messageEl || !iconEl || !closeBtn) {
+                console.error('Notification popup elements not found!', {
+                    popup: !!popup,
+                    messageEl: !!messageEl,
+                    iconEl: !!iconEl,
+                    closeBtn: !!closeBtn
+                });
+                // Fallback to alert if popup elements don't exist
+                alert(message);
+                return;
+            }
+            
+            // Set message and icon
+            messageEl.textContent = message;
+            iconEl.textContent = icon;
+            
+            // Show popup
+            popup.classList.remove('hide');
+            popup.classList.add('show');
+            
+            // Auto-hide after duration
+            const autoHide = setTimeout(() => {
+                hideNotification();
+            }, duration);
+            
+            // Close button handler
+            closeBtn.onclick = () => {
+                clearTimeout(autoHide);
+                hideNotification();
+            };
+            
+            console.log('Notification shown:', message);
+        } catch (error) {
+            console.error('Error showing notification:', error);
+            // Fallback to alert
+            alert(message);
+        }
     }
     
     function hideNotification() {
@@ -818,22 +838,25 @@ function setupEventListeners() {
                     // Email was successfully sent - show success popup
                     showNotification('✅ Verification code sent to your email! Please check your inbox (and spam folder).', '✅', 6000);
                 } else if (data.code) {
-                    // Show verification code directly (no email service needed)
+                    // Show verification code directly (email service not working or not configured)
                     console.log('Verification code:', data.code);
-                    showNotification(`✅ Your verification code is: ${data.code}\n\nPlease enter this code below to complete your signup.`, '✅', 8000);
+                    showNotification(`✅ Your verification code is: ${data.code}\n\nPlease enter this code below to complete your signup.`, '✅', 10000);
                 } else {
                     // Fallback message
                     console.warn('No code in response:', data);
                     showNotification('Verification code generated. Please check the browser console (F12) for the code.', 'ℹ️', 5000);
                 }
             } else {
-                showNotification(data.error || 'Failed to send verification code. Please try again.', '❌', 4000);
+                const errorMsg = data.error || 'Failed to send verification code. Please try again.';
+                console.error('Signup error:', errorMsg);
+                showNotification(errorMsg, '❌', 5000);
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
         } catch (error) {
             console.error('Error sending verification code:', error);
-            showNotification(`Error: ${error.message || 'Failed to send verification code. Please check console for details.'}`, '❌', 4000);
+            const errorMsg = `Error: ${error.message || 'Failed to send verification code. Please check console for details.'}`;
+            showNotification(errorMsg, '❌', 5000);
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
