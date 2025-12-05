@@ -142,8 +142,19 @@ Hasan Irfan Perfumes Team
                     html: emailHtml,
                 });
                 
-                console.log('Resend email sent successfully:', JSON.stringify(emailResult));
-                messageSent = true;
+                console.log('Resend email result:', JSON.stringify(emailResult));
+                
+                // Check if email was actually sent (Resend returns { id: '...' } on success)
+                if (emailResult && (emailResult.id || emailResult.data)) {
+                    messageSent = true;
+                    console.log('Email sent successfully with ID:', emailResult.id || emailResult.data?.id);
+                } else {
+                    console.error('Resend returned unexpected result:', emailResult);
+                    resendError = {
+                        message: 'Resend returned unexpected result',
+                        result: emailResult
+                    };
+                }
             } catch (error) {
                 resendError = {
                     message: error.message || 'Unknown error',
@@ -170,7 +181,10 @@ Hasan Irfan Perfumes Team
                 ? 'Verification code sent to your email!' 
                 : 'Verification code generated (check console in dev mode)',
             codeToken: codeToken,
-            emailSent: messageSent // Flag to indicate if email was actually sent
+            emailSent: messageSent, // Flag to indicate if email was actually sent
+            debug: {
+                resendError: resendError
+            }
         };
         
         // Always include code if email wasn't sent (for dev/testing)
