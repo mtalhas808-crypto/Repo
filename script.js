@@ -782,13 +782,13 @@ function setupEventListeners() {
                     // Email was successfully sent
                     alert('✅ Verification code sent to your email! Please check your inbox (and spam folder).');
                 } else if (data.code) {
-                    // Dev mode - email service not configured, show code
-                    console.log('DEV MODE - Verification code:', data.code);
-                    alert(`🔧 DEV MODE: Your verification code is ${data.code}.\n\nIn production, this will be sent to your email.`);
+                    // Show verification code directly (no email service needed)
+                    console.log('Verification code:', data.code);
+                    alert(`✅ Your verification code is: ${data.code}\n\nPlease enter this code below to complete your signup.`);
                 } else {
-                    // Fallback - try to get code from response or show generic message
-                    console.warn('No code or emailSent flag in response:', data);
-                    alert('Verification code generated. Please check your email (or console in dev mode).\n\nIf you see this message, check the browser console for the code.');
+                    // Fallback message
+                    console.warn('No code in response:', data);
+                    alert('Verification code generated. Please check the browser console (F12) for the code.');
                 }
             } else {
                 alert(data.error || 'Failed to send verification code. Please try again.');
