@@ -128,11 +128,7 @@ Hasan Irfan Perfumes Team
         
         // Option 2: Resend (Alternative - Free tier: 3,000 emails/month)
         const resendApiKey = process.env.RESEND_API_KEY;
-        console.log('Resend check:', {
-            ResendModule: !!Resend,
-            hasApiKey: !!resendApiKey,
-            apiKeyPrefix: resendApiKey ? resendApiKey.substring(0, 10) + '...' : 'none'
-        });
+        let resendError = null;
         
         if (!messageSent && Resend && resendApiKey) {
             try {
@@ -147,21 +143,13 @@ Hasan Irfan Perfumes Team
                 
                 console.log('Resend email sent successfully:', JSON.stringify(emailResult));
                 messageSent = true;
-            } catch (resendError) {
-                console.error('Resend error details:', {
-                    message: resendError.message,
-                    statusCode: resendError.statusCode,
-                    response: resendError.response,
-                    error: JSON.stringify(resendError, Object.getOwnPropertyNames(resendError))
-                });
-                // Don't throw - fall through to show code in popup
-            }
-        } else {
-            if (!Resend) {
-                console.log('Resend module not loaded');
-            }
-            if (!resendApiKey) {
-                console.log('Resend API key not found in environment variables');
+            } catch (error) {
+                resendError = {
+                    message: error.message || 'Unknown error',
+                    statusCode: error.statusCode,
+                    name: error.name
+                };
+                console.error('Resend error:', resendError);
             }
         }
         
@@ -186,7 +174,8 @@ Hasan Irfan Perfumes Team
                 resendModuleAvailable: !!Resend,
                 resendApiKeySet: !!resendApiKey,
                 sendGridAvailable: !!sgMail,
-                sendGridApiKeySet: !!process.env.SENDGRID_API_KEY
+                sendGridApiKeySet: !!process.env.SENDGRID_API_KEY,
+                resendError: resendError
             }
         };
         
